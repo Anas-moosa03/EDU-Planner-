@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Section</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: Arial, sans-serif;
+      background: url('R.jpg') no-repeat center center fixed;
+      background-size: cover;
+      color: #333;
+    }
+
+    /* Header Styling */
+    .header {
+      background-color: #3caf50;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      height: 50px;
+    }
+
+    .header .app-title {
+      font-size: 1.2em;
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-left {
+      height: 60px;
+	
+    }
+
+    .notification-container {
+      position: center;
+    }
+
+    #notification-icon {
+      cursor: pointer;
+      font-size: 1.2em;
+    }
+
+    .notifications {
+      display: none;
+      position: absolute;
+      top: 40px;
+      right: 0;
+      width: 250px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+    }
+
+    .notifications::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      right: 15px;
+      border-width: 0 10px 10px 10px;
+      border-style: solid;
+      border-color: transparent transparent #fff transparent;
+    }
+
+    .notifications .notification-item {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .notifications .notification-item:last-child {
+      border-bottom: none;
+    }
+
+    .notifications .notification-item p {
+      margin: 0 0 5px 0;
+      font-weight: bold;
+    }
+
+    .notifications .notification-item small {
+      color: #888;
+    }
+
+/* Notifications Window */
+.notifications {
+  display: none;
+  position: absolute;
+  top: 60px; /* Positioned directly under the ring icon */
+  right: 50%;
+  transform: translateX(50%);
+  background-color: #fff;
+  color: #333;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 250px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 20;
+}
+
+    .logout-btn {
+      height: 60px;
+      cursor: pointer;
+    }
+
+    .form-container {
+      max-width: 400px;
+      margin: 100px auto 20px;
+      padding: 40px;
+      background-color: #fff;
+      border-radius: 20px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    input[type="text"], select, input[type="datetime-local"] {
+      width: 100%;
+      padding: 10px;
+      margin: 10px 0;
+      border: 1px solid #ddd;
+      border-radius: 5px;
+position: center;
+    }
+
+    .green-button {
+      background-color: #3caf50;
+      color: white;
+      border: none;
+      padding: 10px;
+      width: 100%;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    .green-button:hover {
+      background-color: #388e3c;
+    }
+
+    #event-list {
+      max-width: 400px;
+      margin: 20px auto;
+      padding: 0;
+      list-style-type: none;
+    }
+
+    #event-list li {
+      background-color: #f0f0f0;
+      margin: 10px 0;
+      padding: 10px;
+      border-radius: 5px;
+    }
+
+    /* Footer Navigation */
+    .footer {
+      background-color: #3caf50;
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      padding: 10px 0;
+      height: 55px;
+      z-index: 10;
+    }
+
+    .nav-bar {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .nav-link {
+      color: #fff;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.9em;
+    }
+
+    .nav-link i {
+      font-size: 1.2em;
+      margin-bottom: 5px;
+    }
+/* Notifications Dropdown */
+    .notification-container {
+      position: relative;
+    }
+
+    #notification-icon {
+      margin-left: 10px;
+      cursor: pointer;
+      font-size: 1em; /* Smaller ring size */
+    }
+
+    .notifications {
+      display: none;
+      position: absolute;
+      top: 30px; /* Adjusted for smaller icon */
+      right: 0;
+      width: 300px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      font-size: 14px;
+    }
+
+    .notifications::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      right: 15px; /* Align arrow directly under the bell icon */
+      border-width: 0 10px 10px 10px;
+      border-style: solid;
+      border-color: transparent transparent #fff transparent;
+    }
+
+    .notifications h3 {
+      padding: 10px;
+      margin: 0;
+      border-bottom: 1px solid #ddd;
+      font-size: 16px;
+    }
+
+    .notifications .notification-item {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .notifications .notification-item:last-child {
+      border-bottom: none;
+    }
+
+    .notifications .notification-item p {
+      margin: 0 0 5px 0;
+      font-weight: bold;
+    }
+
+    .notifications .notification-item small {
+      color: #888;
+    }
+
+    .notifications .view-all {
+      text-align: center;
+      padding: 10px;
+      background-color: #f5f5f5;
+      border-top: 1px solid #ddd;
+    }
+
+    .notifications .view-all a {
+      text-decoration: none;
+      color: #00693e;
+      font-weight: bold;
+    }
+
+    /* Header and Footer Adjustments */
+    .header {
+      background-color: #3caf50;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 23px 23px; /* Reduced padding */
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      height: 45px; /* Smaller header */
+
+      
+    }
+
+
+   
+        /* Styling for the popup */
+.popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.popup img {
+  max-width: 80%;
+  max-height: 80%;
+  object-fit: contain;
+}
+
+/* General styling */
+.majors-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.majors-row {
+  display: flex;
+}
+
+.major-card {
+  cursor: pointer;
+  margin: 10px;
+  text-align: center;
+}
+
+.major-card img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
+    /* Styling for logout button */
+    .logout-btn {
+      padding: 10px 20px;
+  
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 5px;
+      margin-top: 5px;
+    }
+
+    .logout-btn:hover {
+      background-color: #d32f2f;
+    }
+
+
+  </style>
+
+
+</head>
+<body>
+  <header class="header">
+    <img src="university-logo.png" alt="University Logo" class="logo-left" style = " margin-left: 2.5rem;
+	height: 60px;">
+    <h1 style="text-align:center;
+         font-size: 1.6rem;
+    	 font-weight: bold;" class="app-title">Admin Section
+      <span class="notification-container">
+        <i class="fas fa-bell" id="notification-icon"></i>
+        <div class="notifications" id="notifications">
+          <h3>Notifications</h3>
+          <div class="notification-item">
+            <p>New sign in to your The University of Jordan...</p>
+            <small>2 hours 57 mins ago</small>
+          </div>
+          <div class="notification-item">
+            <p>New sign in to your The University of Jordan...</p>
+            <small>1 day 6 hours ago</small>
+          </div>
+          <div class="notification-item">
+            <p>New sign in to your The University of Jordan...</p>
+            <small>1 day 8 hours ago</small>
+          </div>
+          <div class="view-all">
+            <a href="#">View all notifications</a>
+          </div>
+        </div>
+      </span>
+    </h1>
+    <img src="log.png" class="logout-btn" alt="University Logo" onclick="logout()" class="logo-right" style = " height: 55px ; margin: 20px"; >
+   
+  </header>
+
+
+  <main>
+    <div class="form-container">
+      <input type="text" id="course-name" placeholder="Course Name">
+      <select id="notification-type">
+        <option value="" disabled selected>Select Type</option>
+        <option value="Quiz">Quiz</option>
+        <option value="Midterm">Midterm</option>
+        <option value="Final">Final</option>
+        <option value="Assignment">Assignment</option>
+      </select>
+      <input type="datetime-local" id="notification-date">
+      <button id="add-notification" class="green-button">Add Event</button>
+    </div>
+    <ul id="event-list"></ul>
+  </main>
+
+  <footer class="footer">
+    <nav class="nav-bar">
+      <a href="home.html" class="nav-link">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+      </a>
+      <a href="todo.html" class="nav-link">
+        <i class="fas fa-tasks"></i>
+        <span>To-Do</span>
+      </a>
+      <a href="links.html" class="nav-link">
+        <i class="fas fa-link"></i>
+        <span>Links</span>
+      </a>
+      <a href="gpa.html" class="nav-link">
+        <i class="fas fa-chart-line"></i>
+        <span>GPA</span>
+      </a>
+      <a href="admin.html" class="nav-link">
+        <i class="fas fa-pencil-alt"></i>
+        <span>Adding Exam</span>
+      </a>
+    </nav>
+  </footer>
+
+  <script>
+    document.getElementById('add-notification').addEventListener('click', function() {
+      const courseName = document.getElementById('course-name').value;
+      const notificationType = document.getElementById('notification-type').value;
+      const notificationDate = document.getElementById('notification-date').value;
+
+      if (courseName && notificationType && notificationDate) {
+        const eventList = document.getElementById('event-list');
+        const li = document.createElement('li');
+        li.textContent = `${courseName} - ${notificationType} - ${new Date(notificationDate).toLocaleString()}`;
+        eventList.appendChild(li);
+      } else {
+        alert('Please fill in all fields');
+      }
+    });
+
+    document.getElementById('notification-icon').addEventListener('click', () => {
+      const notifications = document.getElementById('notifications');
+      notifications.style.display = notifications.style.display === 'block' ? 'none' : 'block';
+    });
+
+    function logout() {
+      window.location.href = 'Landing.html';
+    }
+  </script>
+</body>
+</html>

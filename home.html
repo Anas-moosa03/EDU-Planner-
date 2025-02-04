@@ -1,0 +1,955 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Educational Planner</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+
+/* Notifications Dropdown */
+    .notification-container {
+      position: relative;
+    }
+
+    #notification-icon {
+      margin-left: 10px;
+      cursor: pointer;
+      font-size: 1em; /* Smaller ring size */
+    }
+
+    .notifications {
+      display: none;
+      position: absolute;
+      top: 30px; /* Adjusted for smaller icon */
+      right: 0;
+      width: 300px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      font-size: 14px;
+    }
+
+    .notifications::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      right: 15px; /* Align arrow directly under the bell icon */
+      border-width: 0 10px 10px 10px;
+      border-style: solid;
+      border-color: transparent transparent #fff transparent;
+    }
+
+    .notifications h3 {
+      padding: 10px;
+      margin: 0;
+      border-bottom: 1px solid #ddd;
+      font-size: 16px;
+    }
+
+    .notifications .notification-item {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .notifications .notification-item:last-child {
+      border-bottom: none;
+    }
+
+    .notifications .notification-item p {
+      margin: 0 0 5px 0;
+      font-weight: bold;
+    }
+
+    .notifications .notification-item small {
+      color: #888;
+    }
+
+    .notifications .view-all {
+      text-align: center;
+      padding: 10px;
+      background-color: #f5f5f5;
+      border-top: 1px solid #ddd;
+    }
+
+    .notifications .view-all a {
+      text-decoration: none;
+      color: #00693e;
+      font-weight: bold;
+    }
+
+    /* Header and Footer Adjustments */
+    .header {
+      background-color: #3caf50;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 23px 23px; /* Reduced padding */
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      height: 45px; /* Smaller header */
+
+      
+    }
+
+    .header .app-title {
+      font-size: 1.5em; /* Slightly smaller font size */
+      display: flex;
+      align-items: center;
+      
+
+    }
+
+   
+    
+
+ .footer {
+      background-color: #3caf50;
+      position: sticky;
+      bottom: 0;
+      z-index: 10;
+      padding: 10px 0; /* Reduced padding for footer */
+      height: 45px; /* Smaller footer */
+    }
+
+    .nav-bar {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .nav-link {
+      color: #fff;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.9em; /* Slightly smaller font size */
+    }
+
+    .nav-link i {
+      font-size: 1.2em; /* Smaller icon size */
+      margin-bottom: 5px;
+    }
+
+
+    /* Styling for the popup */
+.popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.popup img {
+  max-width: 80%;
+  max-height: 80%;
+  object-fit: contain;
+}
+
+/* General styling */
+.majors-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.majors-row {
+  display: flex;
+}
+
+.major-card {
+  cursor: pointer;
+  margin: 10px;
+  text-align: center;
+}
+
+.major-card img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
+    /* Styling for logout button */
+    .logout-btn {
+      padding: 10px 20px;
+  
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 5px;
+      margin-top: 5px;
+    }
+
+    .logout-btn:hover {
+      background-color: #d32f2f;
+    }
+
+    /* CSS */
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-image: url('R.jpg');
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      color: #333;
+      overflow-y: scroll;
+    }
+
+    .header {
+      background-color: #4CAF50;
+      color: white;
+      padding: 1rem;
+      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      z-index: 10;
+    }
+
+
+    .logout-btn:hover {
+      background-color: #d32f2f;
+    }
+    .app-title {
+      font-size: 1.5rem;
+      font-weight: 700;
+    }
+
+    #notification-icon {
+      margin-left: 10px;
+      cursor: pointer;
+      font-size: 1em;
+    }
+
+    .notifications {
+      display: none;
+      position: absolute;
+      top: 55px;
+      right: 50%;
+      transform: translateX(50%);
+      background-color: #fff;
+      color: #333;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      width: 250px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      z-index: 20;
+    }
+
+    .content {
+      padding: 8rem 2rem 10rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.9);
+      padding: 2rem;
+      border-radius: 15px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+      max-width: 800px;
+      width: 100%;
+    }
+
+    .section-title {
+      font-size: 1.8rem;
+      font-weight: 700;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .separator {
+      border-top: 1px solid #ccc;
+      margin: 1.5rem 0;
+    }
+
+    input[type="number"],
+    input[type="text"],
+    select {
+      width: 100%;
+      padding: 0.75rem;
+      margin: 0.5rem 0;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 1rem;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 0.75rem 1rem;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+      margin-top: 1rem;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    .modal-content {
+      background-color: white;
+      margin: 10% auto;
+      padding: 2rem;
+      border: 1px solid #888;
+      width: 80%;
+      max-width: 400px;
+      text-align: center;
+      border-radius: 10px;
+    }
+
+    .close-button {
+      color: #aaa;
+      float: right;
+      font-size: 28px;
+      font-weight: bold;
+    }
+
+    .close-button:hover {
+      color: black;
+      cursor: pointer;
+    }
+
+    .footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: #4CAF50;
+      padding: 1rem 0;
+    }
+
+    .nav-bar {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.9rem;
+    }
+
+    .nav-link i {
+      font-size: 1.5rem;
+    }
+
+/* General Styling */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: Arial, sans-serif;
+  background: url('R.jpg') no-repeat center center fixed;
+  background-size: cover;
+  color: #333;
+  overflow-y: scroll;
+}
+
+/* Header Styling */
+.header {
+  background-color: #3caf50;
+  color: #fff;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px 20px; /* Increased padding */
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  height: 55px; /* Slightly bigger header */
+}
+
+.header .app-title {
+  font-size: 1.8em; /* Slightly larger font size */
+  display: flex;
+  align-items: center;
+}
+
+.header img {
+  height: 60px; /* Increased logo size */
+}
+
+#notification-icon {
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 1.2em;
+}
+
+/* Notifications Window */
+.notifications {
+  display: none;
+  position: absolute;
+  top: 60px; /* Positioned directly under the ring icon */
+  right: 50%;
+  transform: translateX(50%);
+  background-color: #fff;
+  color: #333;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 250px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 20;
+}
+
+/* Main Content */
+.content {
+  text-align: center;
+  padding: 20px;
+}
+
+/* Select Major Button */
+.select-major {
+  background-color: #fff;
+  padding: 10px 20px;
+  font-size: 1.2em;
+  border: none;
+  border-radius: 5px;
+  margin: 20px auto;
+  cursor: pointer;
+  display: inline-block;
+}
+
+/* Majors Grid */
+.majors-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.majors-row {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.major-card {
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 200px;
+}
+
+.major-card img {
+  width: 100%;
+  height: 120px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.major-card p {
+  font-weight: bold;
+  margin-top: 10px;
+}
+
+/* Separator */
+.separator {
+  margin: 30px auto;
+  width: 80%;
+  border: 1px solid #ddd;
+}
+
+/* Tips Section */
+.tips-container {
+  display: flex;
+  justify-content: center;
+  gap: 20px;
+  margin-bottom: 40px;
+}
+
+.tip-card {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  width: 200px;
+  text-align: center;
+}
+
+.tip-card i {
+  font-size: 2em;
+  color: #3caf50;
+  margin-bottom: 10px;
+}
+
+.tip-card h2 {
+  font-size: 1.2em;
+  margin: 10px 0;
+}
+
+/* Event Ticketing Section */
+.features-section {
+  text-align: center;
+  margin: 50px auto;
+  padding: 40px;
+  background: linear-gradient(to bottom, #ffffff, #f7f9fc);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  border-radius: 15px;
+  width: 90%;
+  max-width: 1200px;
+}
+
+/* Section Title */
+.features-section h2 {
+  font-size: 2.5rem;
+  font-weight: bold;
+  color: #003366;
+  margin-bottom: 30px;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.15);
+}
+
+/* Feature Cards */
+.feature-card {
+  background: linear-gradient(135deg, #e6f7ff, #ffffff);
+  border: 1px solid #cce7ff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.feature-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Feature Card Title */
+.feature-card h3 {
+  font-size: 1.4rem;
+  color: #00509e;
+  margin-bottom: 15px;
+}
+
+/* Feature Card Description */
+.feature-card p {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.5;
+}
+
+/* Shuffle Button with 3D Glow */
+.shuffle-btn {
+  margin-top: 30px;
+  padding: 12px 25px;
+  background: linear-gradient(135deg, #007bff, #0056b3);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 0 15px rgba(0, 123, 255, 0.8);
+  text-transform: uppercase;
+}
+
+.shuffle-btn:hover {
+  background: linear-gradient(135deg, #0056b3, #003c8f);
+  transform: scale(1.1);
+  box-shadow: 0 0 25px rgba(0, 123, 255, 1), 0 0 40px rgba(0, 86, 179, 0.8);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+  .features-container {
+      grid-template-columns: 1fr;
+  }
+}
+
+
+    /* Notifications Dropdown */
+    .notification-container {
+      position: relative;
+    }
+
+    #notification-icon {
+      margin-left: 10px;
+      cursor: pointer;
+      font-size: 1em; /* Smaller ring size */
+    }
+
+    .notifications {
+      display: none;
+      position: absolute;
+      top: 30px; /* Adjusted for smaller icon */
+      right: 0;
+      width: 300px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      font-size: 14px;
+    }
+
+    .notifications::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      right: 15px; /* Align arrow directly under the bell icon */
+      border-width: 0 10px 10px 10px;
+      border-style: solid;
+      border-color: transparent transparent #fff transparent;
+    }
+
+    .notifications h3 {
+      padding: 10px;
+      margin: 0;
+      border-bottom: 1px solid #ddd;
+      font-size: 16px;
+    }
+
+    .notifications .notification-item {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .notifications .notification-item:last-child {
+      border-bottom: none;
+    }
+
+    .notifications .notification-item p {
+      margin: 0 0 5px 0;
+      font-weight: bold;
+    }
+
+    .notifications .notification-item small {
+      color: #888;
+    }
+
+    .notifications .view-all {
+      text-align: center;
+      padding: 10px;
+      background-color: #f5f5f5;
+      border-top: 1px solid #ddd;
+    }
+
+    .notifications .view-all a {
+      text-decoration: none;
+      color: #00693e;
+      font-weight: bold;
+    }
+
+    /* Header and Footer Adjustments */
+    .header {
+      background-color: #3caf50;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 23px 23px; /* Reduced padding */
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      height: 45px; /* Smaller header */
+
+      
+    }
+
+    .header .app-title {
+      font-size: 1.5em; /* Slightly smaller font size */
+      display: flex;
+      align-items: center;
+      
+
+    }
+
+   
+        /* Styling for the popup */
+.popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.popup img {
+  max-width: 80%;
+  max-height: 80%;
+  object-fit: contain;
+}
+
+/* General styling */
+.majors-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.majors-row {
+  display: flex;
+}
+
+.major-card {
+  cursor: pointer;
+  margin: 10px;
+  text-align: center;
+}
+
+.major-card img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
+    /* Styling for logout button */
+    .logout-btn {
+      padding: 10px 20px;
+  
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 5px;
+      margin-top: 5px;
+    }
+
+    .logout-btn:hover {
+      background-color: #d32f2f;
+    }
+
+.footer {
+      position: fixed;
+      bottom: 0;
+      width: 100%;
+      background-color: #4CAF50;
+      padding: 1rem 0;
+    }
+
+    .nav-bar {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .nav-link {
+      color: white;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.9rem;
+    }
+
+    .nav-link i {
+      font-size: 1.5rem;
+    }
+
+  </style>
+</head>
+<body>
+  <header class="header">
+    <img src="university-logo.png" alt="University Logo" class="logo-left" style = " margin-left: 2.5rem;
+	height: 60px;">
+    <h1 class="app-title">Educational Planner 
+
+      <span class="notification-container">
+        <i class="fas fa-bell" id="notification-icon"></i>
+        <div class="notifications" id="notifications">
+          <h3>Notifications</h3>
+          <div class="notification-item">
+            <p>New sign in to your The University of Jordan...</p>
+            <small>2 hours 57 mins ago</small>
+          </div>
+          <div class="notification-item">
+            <p>New sign in to your The University of Jordan...</p>
+            <small>1 day 6 hours ago</small>
+          </div>
+          <div class="notification-item">
+            <p>New sign in to your The University of Jordan...</p>
+            <small>1 day 8 hours ago</small>
+          </div>
+          <div class="view-all">
+            <a href="#">View all notifications</a>
+          </div>
+        </div>
+      </span>
+    </h1>
+    <img src="log.png" class="logout-btn" alt="University Logo" onclick="logout()" class="logo-right" style = " height: 55px ; margin: 50px"; >
+   
+  </header>
+
+  <main class="content">
+   
+  <h1 class="select-major"> Select Your Major </h1> 
+
+  <div class="majors-container">
+    <div class="majors-row">
+      <div class="major-card" onclick="showImage('css.png')">
+        <img src="cs.jpg" alt="Computer Science">
+        <p>Computer Science</p>
+      </div>
+      <div class="major-card" onclick="showImage('cis.png')">
+        <img src="cis.jpg" alt="Computer Information Systems">
+        <p>Computer Information Systems</p>
+      </div>
+      <div class="major-card" onclick="showImage('Ai.png')">
+        <img src="ai.jpg" alt="Artificial Intelligence">
+        <p>Artificial Intelligence</p>
+      </div>
+    </div>
+    <div class="majors-row">
+      <div class="major-card" onclick="showImage('dss.png')">
+        <img src="ds.jpg" alt="Data Science">
+        <p>Data Science</p>
+      </div>
+      <div class="major-card" onclick="showImage('cyss.png')">
+        <img src="cys.jpg" alt="Cyber Security">
+        <p>Cyber Security</p>
+      </div>
+      <div class="major-card" onclick="showImage('bit.png')">
+        <img src="bi.jpg" alt="Business Intelligence">
+        <p>Business Intelligence</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Pop-up image container -->
+  <div id="popup" class="popup" onclick="closePopup()">
+    <img id="popup-image" src="" alt="Enlarged Image">
+  </div>
+
+    <hr class="separator">
+    <div class="features-section">
+      <h2>Access Unlimited Functionality</h2>
+      <div class="features-container">
+          <!-- Feature cards will be inserted dynamically by JavaScript -->
+      </div>
+      
+  </div>
+  <script>
+      const featuresContainer = document.querySelector('.features-container');
+      const shuffleBtn = document.querySelector('.shuffle-btn');
+
+      // Define all features
+      const features = [
+          { title: "Access your courses", description: "you can access courses related to your major, and see your progress " },
+          { title: "Calculate GPA", description: "after each semester you can calculate and see how your GPA changed" },
+          { title: "keep in touch", description: "you can get access to instructor's emails to communicate with them and keep in touch" },
+          { title: "Plan Your Schedule", description: "Organize your courses and deadlines efficiently." },
+          { title: "Manage Tasks", description: "Keep track of assignments and projects" },
+          { title: "Get Notifications", description: "Stay updated with important reminders." }
+      ];
+
+      let currentIndex = 0;
+
+      // Function to display features
+      function displayFeatures(startIndex) {
+          featuresContainer.innerHTML = ''; // Clear the container
+          for (let i = 0; i < 3; i++) {
+              const feature = features[(startIndex + i) % features.length]; // Cycle through features
+              const card = document.createElement('div');
+              card.className = 'feature-card';
+              card.innerHTML = `
+                  <h3>${feature.title}</h3>
+                  <p>${feature.description}</p>
+              `;
+              featuresContainer.appendChild(card);
+          }
+      }
+
+     
+      // Shuffle automatically every 5 seconds
+      setInterval(() => {
+          currentIndex = (currentIndex + 3) % features.length;
+          displayFeatures(currentIndex);
+      }, 5000);
+
+      // Initial display
+      displayFeatures(currentIndex);
+
+      // Function to show the enlarged image
+function showImage(imageUrl) {
+  var popup = document.getElementById("popup");
+  var popupImage = document.getElementById("popup-image");
+  
+  // Set the src of the popup image
+  popupImage.src = imageUrl;
+
+  // Display the popup
+  popup.style.display = "flex";
+}
+
+// Function to close the popup when clicked
+function closePopup() {
+  var popup = document.getElementById("popup");
+  popup.style.display = "none";
+}
+function logout() {
+      window.location.href = 'Landing.html';  // Redirects to the landings page
+    }
+
+    document.getElementById('notification-icon').addEventListener('click', () => {
+      const notifications = document.getElementById('notifications');
+      notifications.style.display = notifications.style.display === 'block' ? 'none' : 'block';
+    });
+      </script> 
+
+ <footer class="footer">
+    <nav class="nav-bar">
+      <a href="home.html" class="nav-link">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+      </a>
+      <a href="todo.html" class="nav-link">
+        <i class="fas fa-tasks"></i>
+        <span>To-Do</span>
+      </a>
+      <a href="links.html" class="nav-link">
+        <i class="fas fa-link"></i>
+        <span>Links</span>
+      </a>
+      <a href="gpa.html" class="nav-link">
+        <i class="fas fa-chart-line"></i>
+        <span>GPA</span>
+      </a>
+      <a href="admin.html" class="nav-link">
+        <i class="fas fa-pencil-alt"></i>
+        <span>Adding Exam</span>
+      </a>
+    </nav>
+  </footer>
+
+</body>

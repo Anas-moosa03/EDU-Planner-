@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="home.css">
+    <title>Login and Sign Up</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            perspective: 1000px;
+        }
+
+        .container {
+            position: relative;
+            width: 400px;
+            height: 520px;
+        }
+
+        .flip-card {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transform-style: preserve-3d;
+            transition: transform 0.8s;
+        }
+
+        .flip-card.flipped {
+            transform: rotateY(180deg);
+        }
+
+        .form-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            background-color: #fff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            backface-visibility: hidden;
+            box-sizing: border-box;
+        }
+
+        .form-container h2 {
+            margin-bottom: 10px;
+        }
+
+        .intro-text {
+            font-size: 14px;
+            color: #555;
+            margin-bottom: 20px;
+        }
+
+        .form-container input[type="email"],
+        .form-container input[type="password"] {
+            width: calc(100% - 20px);
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            box-sizing: border-box;
+        }
+
+        .form-container button {
+            background-color: #00693e;
+            color: #fff;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 5px;
+            font-size: 18px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 10px;
+        }
+
+        .form-container button:hover {
+            background-color: #004d2d;
+        }
+
+        .signup-container {
+            transform: rotateY(180deg);
+        }
+
+        .switch-link {
+            margin-top: 15px;
+            color: #00693e;
+            cursor: pointer;
+        }
+
+        .forgot-password {
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .forgot-password a {
+            color: #00693e;
+            text-decoration: none;
+        }
+
+        .password-requirements {
+            font-size: 12px;
+            color: #555;
+            text-align: left;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .password-requirements ul {
+            padding-left: 20px;
+        }
+
+        .password-requirements li {
+            margin-bottom: 5px;
+        }
+
+        .error-message {
+            color: red;
+            font-size: 14px;
+            display: none;
+            margin-top: 10px;
+        }
+
+        .password-mismatch {
+            color: red;
+            font-size: 14px;
+            display: none;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="flip-card" id="flip-card">
+            <!-- Login Form -->
+            <div class="form-container login-container">
+                <h2>Login</h2>
+                <p class="intro-text">Welcome back! Please log in to access your account and continue your journey.</p>
+                <form onsubmit="handleLogin(event)">
+                    <input type="email" placeholder="Enter your email" required>
+                    <input type="password" placeholder="Enter your password" required>
+                    <button type="submit">Log In</button>
+                </form>
+                <div class="forgot-password" onclick = "fuck()">
+                    <a href="#">Forgot Password?</a>
+                </div>
+                <div class="switch-link" onclick="flipCard()">Don't have an account? Sign Up</div>
+            </div>
+
+            <!-- Sign Up Form -->
+            <div class="form-container signup-container">
+                <h2>Sign Up</h2>
+                <form id="signup-form" onsubmit="handleSignUp(event)">
+                    <input type="email" id="email" placeholder="Enter your email" required>
+                    <input type="password" id="password" placeholder="Enter your password" required>
+                    <div class="password-requirements" id="password-requirements">
+                        <strong>Password Requirements:</strong>
+                        <ul>
+                            <li>At least one uppercase letter</li>
+                            <li>At least one special character</li>
+                            <li>More than 8 characters</li>
+                        </ul>
+                    </div>
+                    <input type="password" id="confirm-password" placeholder="Confirm your password" required>
+                    <div class="error-message" id="error-message">Please ensure the email and password meet the requirements.</div>
+                    <div class="password-mismatch" id="password-mismatch">Passwords do not match.</div>
+                    <button type="submit">Sign Up</button>
+                </form>
+                <div class="switch-link" onclick="flipCard()">Already have an account? Log In</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function flipCard() {
+            document.getElementById('flip-card').classList.toggle('flipped');
+        }
+
+        function handleSignUp(event) {
+            event.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirm-password').value;
+            const errorMessage = document.getElementById('error-message');
+            const passwordMismatch = document.getElementById('password-mismatch');
+            const passwordRequirements = document.getElementById('password-requirements');
+
+            const emailValid = email.includes('@') && email.includes('.com');
+            const hasUpperCase = /[A-Z]/.test(password);
+            const hasSpecialChar = /[!@#$%^&*(),.?":{}|<>]/.test(password);
+            const isLongEnough = password.length > 8;
+
+            if (password !== confirmPassword) {
+                passwordMismatch.style.display = 'block';
+                errorMessage.style.display = 'none';
+                passwordRequirements.style.display = 'none';
+                return;
+            } else {
+                passwordMismatch.style.display = 'none';
+            }
+
+            if (!emailValid || !hasUpperCase || !hasSpecialChar || !isLongEnough) {
+                errorMessage.style.display = 'block';
+                passwordRequirements.style.display = 'block';
+            } else {
+                errorMessage.style.display = 'none';
+                passwordRequirements.style.display = 'none';
+                window.location.href = 'home.html';
+            }
+        }
+	function fuck() {
+  alert("Talk to the registration and admission");
+}
+
+    </script>
+</body>
+</html>

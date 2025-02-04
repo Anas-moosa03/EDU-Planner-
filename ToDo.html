@@ -1,0 +1,737 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>To-Do List</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+    <style>
+
+body {
+  font-family: 'Roboto', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-image: url('R.jpg');
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
+  color: #333;
+  overflow-y: scroll;
+}
+
+.header {
+      background-color: #3caf50;
+      color: #fff;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 23px 23px; /* Reduced padding */
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      height: 45px; /* Smaller header */
+
+      
+    }
+
+    .header .app-title {
+      font-size: 1.5em; /* Slightly smaller font size */
+      display: flex;
+      align-items: center;
+      
+
+    }
+
+
+.header .logo-left {
+	margin-left: 2.5rem;
+	height: 60px;
+}
+
+.header .logo-right {
+  margin-right: 1.5rem;
+	
+}
+
+.app-title {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+
+.content {
+  padding: 8rem 2rem 10rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4rem;
+}
+
+.card {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 4rem;
+  border-radius: 25px;
+  box-shadow: 2px 6px 10px rgba(0, 0, 0, 0.2);
+  max-width: 800px;
+  width: 100%;
+}
+
+.section-title {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 1rem 1rem;
+  border-radius: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  max-width: 1000px;
+  margin-bottom: 1rem;
+}
+
+.intro-text {
+  background: rgba(255, 255, 255, 0.9);
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  text-align: center;
+}
+
+.todo-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-width: 800px;
+  width: 100%;
+}
+
+.task {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 1rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+}
+
+.task-title {
+  background: #f1f1f1;
+  padding: 1rem;
+  border-radius: 10px;
+}
+
+.task-desc {
+  background: #f9f9f9;
+  padding: 0.5rem;
+  border-radius: 5px;
+  margin: 0.5rem 0;
+}
+
+.task-time {
+  font-weight: 500;
+  color: #d9534f;
+}
+
+.task-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 1rem 1rem;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-top: 0.5rem;
+}
+
+.task-button:hover {
+  background-color: #45a049;
+}
+
+.add-task {
+  background: rgba(255, 255, 255, 0.95);
+  padding: 1.5rem;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 800px;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.task-input, .task-textarea, .task-deadline {
+  width: 100%;
+  padding: 0.75rem;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 1rem;
+}
+
+.add-button {
+  background-color: #4CAF50;
+  color: white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+  text-align: center;
+}
+
+.add-button:hover {
+  background-color: #45a049;
+}
+
+.footer {
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+  background-color: #4CAF50;
+  padding: 1rem 0;
+  z-index: 10;
+}
+
+.nav-bar {
+  display: flex;
+  justify-content: space-around;
+}
+
+.nav-link {
+  color: white;
+  text-decoration: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+}
+
+.nav-link i {
+  font-size: 1.5rem;
+}
+
+.nav-link:hover {
+  color: #d4edda;
+}
+
+   /* Notifications Dropdown */
+    .notification-container {
+      position: relative;
+    }
+
+    #notification-icon {
+      margin-left: 10px;
+      cursor: pointer;
+      font-size: 1em; /* Smaller ring size */
+    }
+
+    .notifications {
+      display: none;
+      position: absolute;
+      top: 30px; /* Adjusted for smaller icon */
+      right: 0;
+      width: 300px;
+      background-color: #fff;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+      z-index: 100;
+      font-size: 14px;
+    }
+
+    .notifications::before {
+      content: '';
+      position: absolute;
+      top: -10px;
+      right: 15px; /* Align arrow directly under the bell icon */
+      border-width: 0 10px 10px 10px;
+      border-style: solid;
+      border-color: transparent transparent #ccc transparent;
+    }
+
+    .notifications h3 {
+      padding: 10px;
+      margin: 0;
+      border-bottom: 1px solid #ccc;
+      font-size: 16px;
+    }
+
+    .notifications .notification-item {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+    }
+
+    .notifications .notification-item:last-child {
+      border-bottom: none;
+    }
+
+    .notifications .notification-item p {
+      margin: 0 0 5px 0;
+      font-weight: bold;
+    }
+
+    .notifications .notification-item small {
+      color: #888;
+    }
+
+    .notifications .view-all {
+      text-align: center;
+      padding: 10px;
+      background-color: #f5f5f5;
+      border-top: 1px solid #ddd;
+    }
+
+    .notifications .view-all a {
+      text-decoration: none;
+      color: #00693e;
+      font-weight: bold;
+    }
+   
+    
+
+    .footer {
+      background-color: #3caf50;
+      position: sticky;
+      bottom: 0;
+      z-index: 10;
+      padding: 10px 0; /* Reduced padding for footer */
+      height: 45px; /* Smaller footer */
+    }
+
+    .nav-bar {
+      display: flex;
+      justify-content: space-around;
+    }
+
+    .nav-link {
+      color: #fff;
+      text-decoration: none;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      font-size: 0.9em; /* Slightly smaller font size */
+    }
+
+    .nav-link i {
+      font-size: 1.2em; /* Smaller icon size */
+      margin-bottom: 5px;
+    }
+    /* Styling for the popup */
+.popup {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.7);
+  justify-content: center;
+  align-items: center;
+  z-index: 10;
+}
+
+.popup img {
+  max-width: 80%;
+  max-height: 80%;
+  object-fit: contain;
+}
+
+/* General styling */
+.majors-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.majors-row {
+  display: flex;
+}
+
+.major-card {
+  cursor: pointer;
+  margin: 10px;
+  text-align: center;
+}
+
+.major-card img {
+  width: 200px;
+  height: 200px;
+  object-fit: cover;
+}
+
+    /* Styling for logout button */
+    .logout-btn {
+      padding: 10px 20px;
+  
+      color: white;
+      border: none;
+      cursor: pointer;
+      font-size: 16px;
+      border-radius: 5px;
+      margin-top: 5px;
+    }
+
+    .logout-btn:hover {
+      background-color: #d32f2f;
+    }
+
+      /* General Styling */
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+      .logout-btn:hover {
+      background-color: #d32f2f;
+    }  
+      .logo-left, .logo-right {
+        height: 40px;
+      }
+
+  
+      /* Notification Button Styling */
+      #notificationButton {
+        position: relative;
+        display: inline-block;
+        background-color: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 20px;
+        transition: all 0.3s ease-in-out;
+      }
+  
+      #notificationButton:hover {
+        background-color: #0056b3;
+        transform: scale(1.1);
+      }
+  
+      /* Notifications Dropdown Styling */
+      .notifications {
+        display: none;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        background: white;
+        border-radius: 10px;
+        width: 300px;
+        box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        overflow: hidden;
+        animation: dropdownFade 0.3s ease-in-out;
+      }
+  
+      .notifications p {
+        background-color: #f5f5f5;
+        padding: 10px;
+        margin: 0;
+        font-weight: bold;
+        text-align: center;
+        border-bottom: 1px solid #ddd;
+      }
+  
+      .notifications ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+      }
+  
+      .notifications li {
+        padding: 10px 15px;
+        border-bottom: 1px solid #ddd;
+        transition: background-color 0.3s ease-in-out;
+        cursor: pointer;
+      }
+  
+      .notifications li:hover {
+        background-color: #f0f0f0;
+      }
+  
+      .notifications li:last-child {
+        border-bottom: none;
+      }
+  
+      /* Dropdown Animation */
+      @keyframes dropdownFade {
+        0% {
+          opacity: 0;
+          transform: translateY(-10px);
+        }
+        100% {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      /* Notification Icon */
+      #notification-icon {
+  margin-left: 10px;
+  cursor: pointer;
+  font-size: 1em;
+}
+
+/* Notifications Window */
+.notifications {
+  display: none;
+  position: absolute;
+  top: 55px; /* Positioned directly under the ring icon */
+  right: 50%;
+  transform: translateX(50%);
+  background-color: #fff;
+  color: #333;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  width: 250px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  z-index: 20;
+}
+.progress-container {
+  width: 100%;
+  height: 20px;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar {
+  height: 100%;
+  background-color: #4CAF50;
+  border-radius: 10px;
+  transition: width 0.3s ease;
+}
+
+.task-buttons {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.delete-button {
+  background-color: #d9534f;
+  color: white;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.delete-button i {
+  font-size: 1rem;
+}
+
+.delete-button:hover {
+  background-color: #c9302c;
+}
+
+
+    </style>
+  </head>
+  <body>
+ <header class="header">
+    <img src="university-logo.png" alt="University Logo" class="logo-left">
+    <h1 class="app-title">Educational Planner 
+
+      <span class="notification-container">
+        <i class="fas fa-bell" id="notification-icon"></i>
+        <div class="notifications" id="notifications">
+          <h3>Notifications</h3>
+          <div class="notification-item">
+            <p>New sign in to your The University of Jordan...</p>
+            <small>2 hours 57 mins ago</small>
+          </div>
+          <div class="notification-item">
+            <p>New sign in to your The University of Jordan...</p>
+            <small>1 day 6 hours ago</small>
+          </div>
+          <div class="notification-item">
+            <p>New sign in to your The University of Jordan...</p>
+            <small>1 day 8 hours ago</small>
+          </div>
+          <div class="view-all">
+            <a href="#">View all notifications</a>
+          </div>
+        </div>
+      </span>
+    </h1>
+    <img src="log.png" class="logout-btn" alt="University Logo" onclick="logout()" class="logo-right" style = " height: 55px ; margin: 20px"; >
+   
+  </header>
+  
+
+  <main class="content">
+    <section class="card">
+      <h2 class="section-title">Manage Your Tasks</h2>
+      <p class="intro-text">Stay organized by adding and managing your tasks. Set deadlines and track the remaining time for each task.</p>
+
+      <div class="todo-list" id="todo-list">
+     
+      </div>
+
+
+<button class="show-form-button" id="show-form-button">Add New Objective</button>
+<h3 class="progress-title">Your Progress</h3>
+<div class="progress-container">
+  <div class="progress-bar" id="progress-bar" style="width: 0%;"></div>
+</div>
+
+      <div class="add-task" id="add-task-form" style="display: none; margin-top: 2rem;">
+        <h3 class="add-task-title">Add New Task</h3>
+        <input type="text" class="task-input" id="task-title" placeholder="Task Title">
+        <textarea class="task-textarea" id="task-desc" placeholder="Task Description"></textarea>
+        <input type="datetime-local" class="task-deadline" id="task-deadline">
+        <button class="add-button" id="add-button">Add Task</button>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <nav class="nav-bar">
+      <a href="home.html" class="nav-link">
+        <i class="fas fa-home"></i>
+        <span>Home</span>
+      </a>
+      <a href="todo.html" class="nav-link">
+        <i class="fas fa-tasks"></i>
+        <span>To-Do</span>
+      </a>
+      <a href="links.html" class="nav-link">
+        <i class="fas fa-link"></i>
+        <span>Links</span>
+      </a>
+      <a href="gpa.html" class="nav-link">
+        <i class="fas fa-chart-line"></i>
+        <span>GPA</span>
+      </a>
+      <a href="admin.html" class="nav-link">
+        <i class="fas fa-pencil-alt"></i>
+        <span>Adding Exam</span>
+      </a>
+    </nav>
+  </footer>
+
+
+  <script>
+    function updateRemainingTime() {
+      const tasks = document.querySelectorAll('.task-time');
+      tasks.forEach(task => {
+        const deadline = new Date(task.getAttribute('data-deadline'));
+        const now = new Date();
+        const diff = deadline - now;
+
+        if (diff > 0) {
+          const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+          const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+          task.querySelector('.remaining-time').textContent = `${days} days, ${hours} hours`;
+        } else {
+          task.querySelector('.remaining-time').textContent = "Time's up!";
+        }
+      });
+    }
+
+    function addTask() {
+      const title = document.getElementById('task-title').value.trim();
+      const desc = document.getElementById('task-desc').value.trim();
+      const deadline = document.getElementById('task-deadline').value;
+
+      if (title && desc && deadline) {
+        const todoList = document.getElementById('todo-list');
+        const taskHTML = `
+          <div class="task">
+            <h3 class="task-title">${title}</h3>
+            <p class="task-desc">${desc}</p>
+            <p class="task-time" data-deadline="${deadline}">Time Remaining: <span class="remaining-time"></span></p>
+            <button class="task-button" onclick="markAsComplete(this)">Mark as Complete</button>
+          </div>
+        `;
+        todoList.insertAdjacentHTML('afterbegin', taskHTML);
+        updateRemainingTime();
+        document.getElementById('add-task-form').style.display = 'none';
+        document.getElementById('task-title').value = '';
+        document.getElementById('task-desc').value = '';
+        document.getElementById('task-deadline').value = '';
+      } else {
+        alert('Please fill in all fields before adding a task.');
+      }
+    }
+
+    function markAsComplete(button) {
+      button.innerHTML = '<i class="fas fa-check-circle" style="color: #28a745;"></i> Completed';
+      button.disabled = true;
+    }
+
+    document.getElementById('add-button').addEventListener('click', addTask);
+    document.getElementById('show-form-button').addEventListener('click', () => {
+      document.getElementById('add-task-form').style.display = 'block';
+    });
+
+    document.getElementById('notification-icon').addEventListener('click', () => {
+      const notifications = document.getElementById('notifications');
+      notifications.style.display = notifications.style.display === 'block' ? 'none' : 'block';
+    });
+
+    setInterval(updateRemainingTime, 1000);
+    window.addEventListener('load', updateRemainingTime);
+
+function logout() {
+      window.location.href = 'Landing.html';  // Redirects to the landings page
+    }
+
+function updateProgressBar() {
+  const tasks = document.querySelectorAll('.task');
+  const completedTasks = document.querySelectorAll('.task-button:disabled');
+  const progressPercentage = tasks.length ? (completedTasks.length / tasks.length) * 100 : 0;
+
+  document.getElementById('progress-bar').style.width = `${progressPercentage}%`;
+}
+
+function addTask() {
+  const title = document.getElementById('task-title').value.trim();
+  const desc = document.getElementById('task-desc').value.trim();
+  const deadline = document.getElementById('task-deadline').value;
+
+  if (title && desc && deadline) {
+    const todoList = document.getElementById('todo-list');
+    const taskHTML = `
+      <div class="task">
+        <h3 class="task-title">${title}</h3>
+        <p class="task-desc">${desc}</p>
+        <p class="task-time" data-deadline="${deadline}">Time Remaining: <span class="remaining-time"></span></p>
+        <div class="task-buttons">
+          <button class="task-button" onclick="markAsComplete(this)">Mark as Complete</button>
+          <button class="delete-button" onclick="deleteTask(this)">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </div>
+      </div>
+    `;
+    todoList.insertAdjacentHTML('afterbegin', taskHTML);
+    updateRemainingTime();
+    updateProgressBar();
+
+    document.getElementById('add-task-form').style.display = 'none';
+    document.getElementById('task-title').value = '';
+    document.getElementById('task-desc').value = '';
+    document.getElementById('task-deadline').value = '';
+  } else {
+    alert('Please fill in all fields before adding a task.');
+  }
+}
+
+function markAsComplete(button) {
+  button.innerHTML = '<i class="fas fa-check-circle" style="color: #28a745;"></i> Completed';
+  button.disabled = true;
+  updateProgressBar();
+}
+
+function deleteTask(button) {
+  button.closest('.task').remove();
+  updateProgressBar();
+}
+
+
+  </script>
+</body>
+</html>
